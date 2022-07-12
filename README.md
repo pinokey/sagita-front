@@ -21,8 +21,7 @@ The plan is to have the following features
 
 ## Problem and Solution
 NFTコレクションにおいて、二次創作とオリジナル作品が相互にコミュニティを盛り上げている一方で、このような関係性はコミュニティが成熟するほど複雑になり、新規参入者にとって理解しにくくなる。二次創作とオリジナル作品の関係性をビジュアライズすることで新規参入のハードルを下げ、二次創作によるネットワーク効果を高める。
-CC0の作品が増えていく中で、nft同士の関連性がgraphで見えるようになったらめっちゃ最高やん！！
-今は、売り上げランキングだったり、中央集権的な二次創作リストしか存在しない
+今は、売り上げランキングだったり、中央集権的な二次創作リストしか存在せず、正確な関係性を認識する手段がない。
 
 In the NFT Collection, while derivative works and original works mutually enliven the community, the more mature the community becomes, the more complex this relationship becomes, and the harder it is for newcomers to understand. Therefore, visualizing the relationship between derivative works and original works lowers the hurdle for newcomers and enhances the networking effect of derivative works.
 As the number of CC0 works increases, it would be great if the relationship between nfts could be seen in graphs!
