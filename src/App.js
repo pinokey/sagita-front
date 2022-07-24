@@ -12,7 +12,7 @@ const App = () => {
   console.log("currentAccount: ", currentAccount);
   const [messageValue, setMessageValue] = useState("")
   const [allEdges, setAllEdges] = useState([]);
-  const contractAddress = "0xbc9482466Ab7a2842311Ae3E4832dBaB62F4b20F";
+  const contractAddress = "0x4ea84feec1a4BDa1128451355148dCd1C294cc58";
   const contractABI = abi.abi;
   const getAllEdges = async () => {
     const {ethereum} = window;
@@ -168,9 +168,9 @@ const approve = async(index) => {
 
     <div className="mainContainer">
        <div className="fixed left-0 right-0 bg-white z-10">
-         <div class="mx-auto max-w-7xl px-2 lg:px-4">
-       <header class="flex flex-col lg:flex-row lg:items-center lg:h-20">
-       <div class="flex items-center h-14"><div class="flex flex-grow"><a class="flex items-center" href="/">
+         <div className="mx-auto max-w-7xl px-2 lg:px-4">
+       <header className="flex flex-col lg:flex-row lg:items-center lg:h-20">
+       <div className="flex items-center h-14"><div className="flex flex-grow"><a className="flex items-center" href="/">
       Sagita
        </a>
        </div>
