@@ -10,9 +10,13 @@ const App = () => {
   //{x}で値を支える
   const [currentAccount, setCurrentAccount] = useState("");
   console.log("currentAccount: ", currentAccount);
-  const [messageValue, setMessageValue] = useState("")
+  const [ParentName, setParentName] = useState("");
+  const [ParentAddress, setParentAddress] = useState("");
+  const [ChildName, setChildName] = useState("");
+  const [ChildAddress, setChildAddress] = useState("");
+
   const [allEdges, setAllEdges] = useState([]);
-  const contractAddress = "0x4ea84feec1a4BDa1128451355148dCd1C294cc58";
+  const contractAddress = "0xc8b538D83669604772C18F7B004Bfe7053cDb33b";
   const contractABI = abi.abi;
   const getAllEdges = async () => {
     const {ethereum} = window;
@@ -71,7 +75,7 @@ const App = () => {
 useEffect(() => {
   let sagitaPortalContract;
 
-  const onNewEdge = (indexer, timestamp, parentname, parenturl, parentcontract, childname, childurl, childcontract, approvers) =>  {
+  const onNewEdge = (indexer, timestamp, parentname, parentcontract, childname, childcontract, approvers) =>  {
     console.log("NewWave", parentname, childname, approvers);
     setAllEdges(prevState => [
       ...prevState,
@@ -116,6 +120,40 @@ const connectWallet = async () => {
 }
 
 //edgeを追加する関数を実装
+const AddEdge = async() => {
+  try {
+    const {ethereum} = window;
+    console.log("aaa");    
+    if (ethereum) {
+      console.log("bb");    
+      const provider = new ethers.providers.Web3Provider(ethereum);
+    
+      const signer = provider.getSigner();
+      const sagitaPortalContract = new ethers.Contract(contractAddress,  contractABI, signer);
+      // let count = await sagitaPortalContract.getTotalWaves();
+      // let contractBalance = await provider.getBalance( 
+      //   sagitaPortalContract.address);
+      //   console.log(
+      //     "Contract balance:", 
+      //     ethers.utils.formatEther(contractBalance)
+      //   );
+      // console.log("Retrieved total wave count...", count.toNumber());
+      console.log("Signer:",signer);    
+      //コントラクトにwaveを書き込む
+      const addedgeTxn = await sagitaPortalContract.addEdge(ParentName,ParentAddress,ChildName,ChildAddress,[], {gasLimit:300000});
+      console.log("Mining...", addedgeTxn.hash);
+      await addedgeTxn.wait();
+      console.log("Minted --", addedgeTxn.hash);
+      getAllEdges();
+    } else {
+      console.log("Ethereum object doesn't exist!");
+    }
+  } catch (error) {
+  console.log(error)
+  } 
+}
+
+
 //投票する関数を実装
 const approve = async(index) => {
   try {
@@ -140,16 +178,16 @@ const approve = async(index) => {
       console.log("Minted --", approveTxn.hash);
       // count = await sagitaPortalContract.getTotalWaves();
       // console.log("Retrieved total wave count ...", count.toNumber()) ;
-      let contractBalance_post = await provider.getBalance(sagitaPortalContract.address);
-      if (contractBalance_post < contractBalance){
-        console.log("User won ETH!");
-      } else {
-        console.log("User didn't win Eth.");
-      }
-      console.log(
-        "contract balance after approval",
-        ethers.utils.formatEther(contractBalance_post)
-      );
+      // let contractBalance_post = await provider.getBalance(sagitaPortalContract.address);
+      // if (contractBalance_post < contractBalance){
+      //   console.log("User won ETH!");
+      // } else {
+      //   console.log("User didn't win Eth.");
+      // }
+      // console.log(
+      //   "contract balance after approval",
+      //   ethers.utils.formatEther(contractBalance_post)
+      // );
       getAllEdges();
     } else {
       console.log("Ethereum object doesn't exist!");
@@ -175,7 +213,7 @@ const approve = async(index) => {
        </a>
        </div>
        </div>
-               <div className="ml-auto flex items-center"><nav className="hidden lg:flex space-x-10 ml-4 items-center"><a className="text-base font-medium text-gray-500 hover:text-gray-900" href="/addedge">Add Edge</a><a className="text-base font-medium text-gray-500 hover:text-gray-900" href="/validation">Approve Edge</a>
+               <div className="ml-auto flex items-center"><nav className="hidden lg:flex space-x-10 ml-4 items-center"><a className="text-base font-medium text-gray-500 hover:text-gray-900" href="/addedge">Add Band</a><a className="text-base font-medium text-gray-500 hover:text-gray-900" href="/validation">Approve Band</a>
                <div>Chain: <b>Rinkeby</b></div>
                <div>
                   {/* ウォレットコネクトボタンの実装*/}
@@ -196,18 +234,60 @@ const approve = async(index) => {
         <div className="text-gray-400 text-sm bio">
           sagita visualizes the relation of the original and fanfic. Let's visualize your community!!
         </div>
-        {/* <button className="waveButton" onClick={wave}>
-          approve
-        </button> */}
        
-        {/* メッセージボックスを実装
-        {currentAccount && (<textarea name="messageArea"
-        placeholder="メッセージはこちら"
-        type="text"
-        id="message"
-        value={messageValue}
-        onChange={e => setMessageValue(e.target.value)}/>)} */}
-        <h2 className="text-lg mb-1">Edges</h2>
+        <h2 className="text-lg mb-1">Add Bands</h2>
+        <div className="sticky bottom-0 py-4 md:py-0 bg-white mb-12">
+        {currentAccount && (
+          <form className="mt-8 space-y-4">
+    
+      <div className="rounded-md -space-y-px text-sm md:text-base">
+      <div className="grid grid-cols-12 items-center">
+      <label for="ParentName" className="col-span-3 text-left">Parent Collection Name<span className="text-red-400">*</span></label>
+      <textarea name="messageArea" className="col-span-9 appearance-none rounded-none relative block px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+      placeholder="Parent Collection Name"
+      type="text"
+      id="ParentName"
+      value={ParentName}
+      onChange={e => setParentName(e.target.value)}/>
+      </div>
+      <div className="grid grid-cols-12 items-center">
+      <label for="ParentAddress" className="col-span-3 text-left">Parent Collection Contract Address<span className="text-red-400">*</span></label>
+      <textarea name="messageArea" className="col-span-9 appearance-none rounded-none relative block px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+      placeholder="Parent Contract Address"
+      type="text"
+      id="ParentAddress"
+      value={ParentAddress}
+      onChange={e => setParentAddress(e.target.value)}/>
+      </div>
+       <div className="grid grid-cols-12 items-center">
+       <label for="ChildName" className="col-span-3 text-left">Child Collection Name<span className="text-red-400">*</span></label>
+       <textarea name="messageArea" className="col-span-9 appearance-none rounded-none relative block px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+      placeholder="Child Collection Name"
+      type="text"
+      id="ChildName"
+      value={ChildName}
+      onChange={e => setChildName(e.target.value)}/>
+      </div>
+      <div className="grid grid-cols-12 items-center">
+      <label for="ChildAddress" className="col-span-3 text-left">Child Collection Contract Address<span className="text-red-400">*</span></label>
+       <textarea name="messageArea" className="col-span-9 appearance-none rounded-none relative block px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+      placeholder="Child Contract Address"
+      type="text"
+      id="ChildAddress"
+      value={ChildAddress}
+      onChange={e => setChildAddress(e.target.value)}/>
+      </div>
+          </div>
+     
+      </form>)}
+      </div>
+      {currentAccount && (
+      <button className="group  addband relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => AddEdge()}>
+        add band
+      </button>)}
+     
+
+        <h2 className="text-lg mb-1">Bands</h2>
         <p className="text-gray-400 text-sm">Please approve to visualize your community !!</p>
         {/*edgeのリストとapproveボタンを表示*/}
         {currentAccount && (
